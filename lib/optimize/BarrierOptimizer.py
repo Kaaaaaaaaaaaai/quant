@@ -39,11 +39,20 @@ class BarrierOptimizer(Optimizer):
 
             for _ in range(self.inner_iter):
 
+                prev_x = x.copy()
+
                 grad_norm_old = grad_norm
 
                 grad = dfdx(x).block_until_ready()
 
                 x = x - self.step * grad
+
+                if any(jnp.isnan(x)) or any(jnp.isinf(x)):
+
+                    print("Numerical issues encountered, reverting to previous step and stopping optimization.")
+                    x = prev_x
+
+                    return x
 
                 if (grad_norm := float(jnp.linalg.norm(grad))) < self.tol:
 
