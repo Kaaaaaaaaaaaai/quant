@@ -12,13 +12,13 @@ class Context:
 
         pass
 
-    def eq_constraints(self):
+    def eq_constraints(self, x:jnp.ndarray):
 
-        pass
+        return jnp.array([])
 
-    def ineq_constraints(self):
+    def ineq_constraints(self, x:jnp.ndarray):
 
-        pass
+        return jnp.array([])
 
     @partial(jax.jit, static_argnames=["self"])
     def constraints(self, x:jnp.ndarray) -> jnp.ndarray:
