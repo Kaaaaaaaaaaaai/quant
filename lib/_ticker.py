@@ -36,3 +36,7 @@ class Ticker:
             ).mean().item() * dividend_per_year
 
         return instance
+    
+    @property
+    def return_(self) -> float:
+        return self.returns + self.dividends - self.cost

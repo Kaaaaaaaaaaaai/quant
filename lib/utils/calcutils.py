@@ -12,7 +12,7 @@ from numpy import dot, eye
 
 def calc_stats(portfolio:Portfolio, device:str = "cpu") -> dict:
 
-    returns = np.array([ticker.returns for ticker in portfolio.tickers])
+    returns = np.array([ticker.return_ for ticker in portfolio.tickers])
     expected_return = portfolio.weights @ returns
     volatility = np.sqrt(portfolio.weights.T @ np.array(calc_sigma(portfolio, device=device)) @ portfolio.weights)
     sharpe_ratio = expected_return / volatility if volatility != 0 else 0.0

@@ -39,11 +39,11 @@ def main():
     risk_free_rate = 0.017
     mu = 1.0
     mu_shrink = 0.1
-    tol = 1e-2
+    tol = 1e-4
     max_inner_iter = 100
     max_outer_iter = 100
     lr = 0.1
-    eps = 1e-4
+    eps = 1e-6
     device = "gpu"
     enable_x64 = False
 
@@ -57,8 +57,8 @@ def main():
         print(df.select("協会コード").to_series().to_list())
         raise ValueError("Some target tickers are not found in the dataset.")
 
-    portfolio = Portfolio([Ticker.load(ticker, f"data/trust/{ticker}.csv", "年月日", "基準価額", None, df.filter(pl.col("協会コード") == ticker).select("信託報酬").item(), r"%Y-%m-%d") for ticker in targets], np.random.normal(0, 1, len(targets)))
-    r = np.array([ticker.returns for ticker in portfolio.tickers])
+    portfolio = Portfolio([Ticker.load(ticker, f"data/trust/{ticker}.csv", "年月日", "基準価額", None, df.filter(pl.col("協会コード") == ticker).select("信託報酬").item()/100, r"%Y-%m-%d") for ticker in targets], np.random.normal(0, 1, len(targets)))
+    r = np.array([ticker.return_ for ticker in portfolio.tickers])
     sigma = calc_sigma(portfolio, device=device)
 
     context = SharpeContext(portfolio, sigma, r, risk_free_rate)
